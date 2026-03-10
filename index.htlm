@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Cabin Kitchen PM2.5 Tool</title>
+
+<style>
+body{
+font-family:Arial;
+background:#f5f1e8;
+padding:30px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+background:white;
+padding:25px;
+border-radius:10px;
+}
+
+input{
+margin:6px;
+padding:5px;
+}
+
+button{
+padding:10px;
+margin-top:10px;
+}
+
+.result{
+margin-top:20px;
+background:#eef4f8;
+padding:15px;
+border-radius:8px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Cabin Kitchen PM2.5 Reduction Tool</h1>
+
+<p>
+Compare indoor PM2.5 exposure from cooking in a small cabin kitchen.
+</p>
+
+<h3>Inputs</h3>
+
+Kitchen Volume (m³)
+<input id="volume" type="number" value="45"><br>
+
+Gas Stove Emission (µg/min)
+<input id="gasEmission" type="number" value="1800"><br>
+
+Induction Emission (µg/min)
+<input id="inductionEmission" type="number" value="500"><br>
+
+Cooking Time (minutes)
+<input id="cookTime" type="number" value="45"><br>
+
+Baseline Ventilation (ACH)
+<input id="baseACH" type="number" value="0.5"><br>
+
+Improved Ventilation (ACH)
+<input id="hoodACH" type="number" value="6"><br>
+
+<button onclick="runModel()">Run Model</button>
+
+<div class="result" id="results"></div>
+
+</div>
+
+<script>
+
+function runModel(){
+
+let V = Number(document.getElementById("volume").value)
+let gasE = Number(document.getElementById("gasEmission").value)
+let indE = Number(document.getElementById("inductionEmission").value)
+let time = Number(document.getElementById("cookTime").value)
+let baseACH = Number(document.getElementById("baseACH").value)
+let hoodACH = Number(document.getElementById("hoodACH").value)
+
+let gasBaseline = (gasE*time)/(V*baseACH)
+let gasVent = (gasE*time)/(V*hoodACH)
+let induction = (indE*time)/(V*baseACH)
+
+document.getElementById("results").innerHTML = `
+<h3>Results</h3>
+
+Baseline Gas Stove: <b>${gasBaseline.toFixed(1)} µg/m³</b><br>
+Gas Stove + Ventilation: <b>${gasVent.toFixed(1)} µg/m³</b><br>
+Induction Stove: <b>${induction.toFixed(1)} µg/m³</b><br><br>
+
+Reduction from Ventilation:
+${((gasBaseline-gasVent)/gasBaseline*100).toFixed(1)}%<br>
+
+Reduction from Induction:
+${((gasBaseline-induction)/gasBaseline*100).toFixed(1)}%
+
+`
+}
+
+</script>
+
+</body>
+</html>
