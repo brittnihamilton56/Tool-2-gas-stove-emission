@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cabin Kitchen PM2.5 Reduction Tool</title>
+  <title>Cabin Kitchen PM2.5 Design Tool</title>
   <style>
     * { box-sizing: border-box; }
 
@@ -16,9 +16,9 @@
     }
 
     .container {
-      max-width: 1000px;
+      max-width: 1050px;
       margin: 30px auto;
-      padding: 0 16px;
+      padding: 0 16px 30px;
     }
 
     .card {
@@ -36,6 +36,7 @@
     .subtitle {
       color: #4b5b68;
       margin-top: -6px;
+      margin-bottom: 0;
     }
 
     .grid {
@@ -51,7 +52,7 @@
     }
 
     .input-group {
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     label {
@@ -60,12 +61,13 @@
       margin-bottom: 4px;
     }
 
-    input {
+    input, select {
       width: 100%;
       padding: 10px 12px;
       border: 1px solid #c9d2da;
       border-radius: 8px;
       font-size: 0.98rem;
+      background: #fff;
     }
 
     button {
@@ -136,16 +138,28 @@
       font-weight: 600;
     }
 
+    .note-box {
+      background: #f8fafb;
+      border-left: 4px solid #c98a2e;
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
     .small {
       color: #596b78;
       font-size: 0.92rem;
+    }
+
+    ul {
+      padding-left: 20px;
     }
 
     footer {
       text-align: center;
       color: #6a7b88;
       font-size: 0.92rem;
-      margin: 20px 0;
+      margin: 20px 0 0;
     }
 
     @media (max-width: 900px) {
@@ -157,101 +171,92 @@
 </head>
 <body>
   <div class="container">
+
     <div class="card">
-      <h1>Cabin Kitchen PM2.5 Reduction Tool</h1>
+      <h1>Cabin Kitchen PM2.5 Design Tool</h1>
       <p class="subtitle">
-        Compare indoor PM2.5 from cooking for a baseline gas stove,
-        a ventilation upgrade, and an induction stove.
+        Compare two engineering alternatives for reducing indoor PM2.5 from cooking in a small cabin kitchen:
+        <strong>(1) ventilation upgrade</strong> and <strong>(2) induction stove conversion</strong>.
       </p>
     </div>
 
     <div class="grid">
       <div class="card">
-        <h2>Inputs</h2>
+        <h2>User Inputs</h2>
 
         <div class="input-group">
           <label for="volume">Kitchen volume (m³)</label>
-          <input id="volume" type="number" value="45" min="1" step="1">
+          <input id="volume" type="number" value="45" min="10" step="1">
         </div>
 
         <div class="input-group">
-          <label for="background">Background PM2.5 (µg/m³)</label>
-          <input id="background" type="number" value="8" min="0" step="0.1">
+          <label for="cookLevel">Cooking intensity</label>
+          <select id="cookLevel">
+            <option value="light">Light cooking / simmering</option>
+            <option value="medium" selected>Typical meal cooking</option>
+            <option value="heavy">Heavy cooking / frying</option>
+          </select>
         </div>
 
         <div class="input-group">
           <label for="cookTime">Cooking duration (minutes)</label>
-          <input id="cookTime" type="number" value="45" min="1" step="1">
+          <input id="cookTime" type="number" value="45" min="5" step="5">
         </div>
 
         <div class="input-group">
-          <label for="postTime">Time in room after cooking (minutes)</label>
-          <input id="postTime" type="number" value="60" min="0" step="1">
+          <label for="postTime">Time spent in kitchen after cooking (minutes)</label>
+          <input id="postTime" type="number" value="60" min="0" step="5">
         </div>
 
         <div class="input-group">
-          <label for="gasEmission">Gas stove PM2.5 emission rate (µg/min)</label>
-          <input id="gasEmission" type="number" value="1800" min="0" step="50">
-        </div>
-
-        <div class="input-group">
-          <label for="inductionEmission">Induction PM2.5 emission rate (µg/min)</label>
-          <input id="inductionEmission" type="number" value="500" min="0" step="10">
-        </div>
-
-        <div class="input-group">
-          <label for="baseACH">Baseline air exchange rate, ACH (1/hr)</label>
-          <input id="baseACH" type="number" value="0.5" min="0.01" step="0.1">
-        </div>
-
-        <div class="input-group">
-          <label for="hoodACH">Improved ventilation ACH (1/hr)</label>
-          <input id="hoodACH" type="number" value="6" min="0.01" step="0.1">
-        </div>
-
-        <div class="input-group">
-          <label for="deposition">Other removal/deposition rate (1/hr)</label>
-          <input id="deposition" type="number" value="0.3" min="0" step="0.1">
-        </div>
-
-        <div class="input-group">
-          <label for="breathingRate">Breathing rate (m³/hr)</label>
-          <input id="breathingRate" type="number" value="0.6" min="0" step="0.05">
+          <label for="ventLevel">Existing ventilation quality</label>
+          <select id="ventLevel">
+            <option value="poor" selected>Poor / leaky window only</option>
+            <option value="moderate">Moderate natural ventilation</option>
+            <option value="good">Good existing ventilation</option>
+          </select>
         </div>
 
         <button id="runBtn" type="button">Run Comparison</button>
+
+        <div class="note-box small">
+          This tool hides raw emission-rate inputs and instead uses built-in assumptions based on cooking intensity.
+          That makes it easier to use while still keeping the assumptions visible below.
+        </div>
       </div>
 
       <div class="card">
-        <h2>Model</h2>
-        <p>
-          This tool uses a simplified single-zone indoor air model.
-        </p>
+        <h2>Model + Assumptions</h2>
+        <p>This tool uses a simplified <strong>single-zone indoor air model</strong>.</p>
+
         <div class="equation">dC/dt = E/V − k(C − Cbg)</div>
-        <p>Where:</p>
+
         <ul>
           <li><strong>C</strong> = indoor PM2.5 concentration</li>
-          <li><strong>E</strong> = emission rate from cooking</li>
+          <li><strong>E</strong> = cooking emission rate</li>
           <li><strong>V</strong> = room volume</li>
           <li><strong>k</strong> = total removal rate</li>
-          <li><strong>Cbg</strong> = background PM2.5 concentration</li>
+          <li><strong>Cbg</strong> = background PM2.5</li>
         </ul>
+
+        <div id="assumptionBox" class="note-box"></div>
+
         <p class="small">
-          Assumptions: the room is well mixed, cooking emissions are constant during the cooking period,
-          and ventilation plus deposition remove particles.
+          Assumptions: the room is well mixed, emissions are constant during cooking, and ventilation plus deposition remove particles.
+          The ventilation alternative increases removal; the induction alternative reduces emissions at the source.
         </p>
       </div>
     </div>
 
     <div class="card">
-      <h2>Results</h2>
+      <h2>Technical Results</h2>
       <div class="results-grid">
         <div class="result-box">
-          <h3>Baseline Gas Stove</h3>
+          <h3>Baseline: Gas Stove</h3>
           <div id="baselineResults"></div>
         </div>
         <div class="result-box">
-          <h3>Alternative 1: Better Ventilation</h3>
+          <h3>Alternative 1: Ventilation Upgrade</h3>
           <div id="ventResults"></div>
         </div>
         <div class="result-box">
@@ -268,12 +273,20 @@
     </div>
 
     <div class="card">
-      <h2>Evaluation Notes</h2>
-      <p id="evaluationText"></p>
+      <h2>MCDA Comparison</h2>
+      <div id="mcdaTable"></div>
+      <p class="small">
+        Technical effectiveness is based on model output. The other categories use a simple structured comparison so the tradeoffs are explicit.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>How to Interpret This Tool</h2>
+      <p id="interpretationText"></p>
     </div>
 
     <footer>
-      CIVE 442 Tool 2 · Cabin Kitchen PM2.5 Design Comparison
+      CIVE 442 Tool 2 · Indoor PM2.5 Reduction Comparison
     </footer>
   </div>
 
@@ -282,43 +295,74 @@
       return parseFloat(document.getElementById(id).value);
     }
 
-    function safePercentReduction(base, alt) {
-      if (base <= 0) return 0;
-      return ((base - alt) / base) * 100;
-    }
-
-    function concentrationEndCooking(C0, Cbg, E, V, k, t) {
-      if (k <= 0) {
-        return C0 + (E / V) * t;
+    function getCookingProfile(level) {
+      if (level === "light") {
+        return {
+          label: "Light cooking / simmering",
+          gasEmission: 800,
+          inductionEmission: 250
+        };
       }
-      var steady = Cbg + (E / V) / k;
-      return steady + (C0 - steady) * Math.exp(-k * t);
+      if (level === "heavy") {
+        return {
+          label: "Heavy cooking / frying",
+          gasEmission: 3200,
+          inductionEmission: 1200
+        };
+      }
+      return {
+        label: "Typical meal cooking",
+        gasEmission: 1800,
+        inductionEmission: 600
+      };
     }
 
-    function averageDuringCooking(C0, Cbg, E, V, k, t) {
-      if (t <= 0) return C0;
+    function getVentProfile(level) {
+      if (level === "poor") {
+        return {
+          label: "Poor / leaky window only",
+          baseACH: 0.4
+        };
+      }
+      if (level === "good") {
+        return {
+          label: "Good existing ventilation",
+          baseACH: 1.5
+        };
+      }
+      return {
+        label: "Moderate natural ventilation",
+        baseACH: 0.8
+      };
+    }
 
+    function concentrationEndCooking(C0, Cbg, E, V, k, tHours) {
+      if (k <= 0) return C0 + (E / V) * tHours;
+      var steady = Cbg + (E / V) / k;
+      return steady + (C0 - steady) * Math.exp(-k * tHours);
+    }
+
+    function averageDuringCooking(C0, Cbg, E, V, k, tHours) {
+      if (tHours <= 0) return C0;
       if (k <= 0) {
-        var endNoRemoval = concentrationEndCooking(C0, Cbg, E, V, k, t);
+        var endNoRemoval = concentrationEndCooking(C0, Cbg, E, V, k, tHours);
         return (C0 + endNoRemoval) / 2;
       }
-
       var steady = Cbg + (E / V) / k;
-      var integral = steady * t + ((C0 - steady) / k) * (1 - Math.exp(-k * t));
-      return integral / t;
+      var integral = steady * tHours + ((C0 - steady) / k) * (1 - Math.exp(-k * tHours));
+      return integral / tHours;
     }
 
-    function concentrationAfterCooking(Cstart, Cbg, k, t) {
+    function concentrationAfterCooking(Cstart, Cbg, k, tHours) {
       if (k <= 0) return Cstart;
-      return Cbg + (Cstart - Cbg) * Math.exp(-k * t);
+      return Cbg + (Cstart - Cbg) * Math.exp(-k * tHours);
     }
 
-    function averageAfterCooking(Cstart, Cbg, k, t) {
-      if (t <= 0) return Cstart;
+    function averageAfterCooking(Cstart, Cbg, k, tHours) {
+      if (tHours <= 0) return Cstart;
       if (k <= 0) return Cstart;
-
-      var integral = Cbg * t + ((Cstart - Cbg) / k) * (1 - Math.exp(-k * t));
-      return integral / t;
+      var integral = Cbg * tHours + ((Cstart - Cbg) / k) * (1 - Math.exp(-k * tHours));
+      return integral / tHours;
     }
 
     function runScenario(volume, background, cookMinutes, postMinutes, emission, ach, deposition, breathingRate) {
@@ -333,8 +377,8 @@
       var CavgPost = averageAfterCooking(CendCook, background, k, postHours);
 
       var peak = Math.max(C0, CendCook, CendPost);
-      var totalExposure = (CavgCook * cookHours) + (CavgPost * postHours);   // µg·hr/m³
-      var inhaledMass = totalExposure * breathingRate;                        // µg
+      var totalExposure = (CavgCook * cookHours) + (CavgPost * postHours);
+      var inhaledMass = totalExposure * breathingRate;
 
       return {
         k: k,
@@ -345,9 +389,22 @@
       };
     }
 
+    function reductionPercent(base, alt) {
+      if (base <= 0) return 0;
+      return ((base - alt) / base) * 100;
+    }
+
+    function scoreTechnical(reduction) {
+      if (reduction >= 60) return 5;
+      if (reduction >= 45) return 4;
+      if (reduction >= 30) return 3;
+      if (reduction >= 15) return 2;
+      return 1;
+    }
+
     function scenarioHtml(result, baselinePeak, baselineInhaled, isBaseline) {
-      var peakReduction = safePercentReduction(baselinePeak, result.peak);
-      var inhaledReduction = safePercentReduction(baselineInhaled, result.inhaledMass);
+      var peakReduction = reductionPercent(baselinePeak, result.peak);
+      var inhaledReduction = reductionPercent(baselineInhaled, result.inhaledMass);
 
       var html = "";
       html += "<p><strong>Peak PM2.5:</strong> " + result.peak.toFixed(1) + " µg/m³</p>";
@@ -359,15 +416,13 @@
         html += "<p><strong>Reduction vs baseline:</strong> —</p>";
       } else {
         html += "<p><strong>Peak reduction:</strong> " + peakReduction.toFixed(1) + "%</p>";
-        html += "<p><strong>Inhaled mass reduction:</strong> " + inhaledReduction.toFixed(1) + "%</p>";
+        html += "<p><strong>Exposure reduction:</strong> " + inhaledReduction.toFixed(1) + "%</p>";
       }
-
       return html;
     }
 
     function makeSummaryTable(baseline, vent, induction) {
-      var html = "";
-      html += '<table class="summary-table">';
+      var html = '<table class="summary-table">';
       html += "<thead><tr>";
       html += "<th>Scenario</th>";
       html += "<th>Peak PM2.5 (µg/m³)</th>";
@@ -375,91 +430,122 @@
       html += "<th>Inhaled Mass (µg)</th>";
       html += "</tr></thead><tbody>";
 
-      html += "<tr>";
-      html += "<td>Baseline Gas</td>";
-      html += "<td>" + baseline.peak.toFixed(1) + "</td>";
-      html += "<td>" + baseline.CendCook.toFixed(1) + "</td>";
-      html += "<td>" + baseline.inhaledMass.toFixed(1) + "</td>";
-      html += "</tr>";
-
-      html += "<tr>";
-      html += "<td>Gas + Better Ventilation</td>";
-      html += "<td>" + vent.peak.toFixed(1) + "</td>";
-      html += "<td>" + vent.CendCook.toFixed(1) + "</td>";
-      html += "<td>" + vent.inhaledMass.toFixed(1) + "</td>";
-      html += "</tr>";
-
-      html += "<tr>";
-      html += "<td>Induction Stove</td>";
-      html += "<td>" + induction.peak.toFixed(1) + "</td>";
-      html += "<td>" + induction.CendCook.toFixed(1) + "</td>";
-      html += "<td>" + induction.inhaledMass.toFixed(1) + "</td>";
-      html += "</tr>";
+      html += "<tr><td>Baseline Gas</td><td>" + baseline.peak.toFixed(1) + "</td><td>" + baseline.CendCook.toFixed(1) + "</td><td>" + baseline.inhaledMass.toFixed(1) + "</td></tr>";
+      html += "<tr><td>Gas + Vent Upgrade</td><td>" + vent.peak.toFixed(1) + "</td><td>" + vent.CendCook.toFixed(1) + "</td><td>" + vent.inhaledMass.toFixed(1) + "</td></tr>";
+      html += "<tr><td>Induction Stove</td><td>" + induction.peak.toFixed(1) + "</td><td>" + induction.CendCook.toFixed(1) + "</td><td>" + induction.inhaledMass.toFixed(1) + "</td></tr>";
 
       html += "</tbody></table>";
       return html;
     }
 
-    function makeRecommendation(vent, induction) {
-      var text = "";
+    function makeMCDATable(ventTech, inductionTech) {
+      var ventCost = 4;
+      var inductionCost = 2;
 
-      if (induction.peak < vent.peak && induction.inhaledMass < vent.inhaledMass) {
-        text = "Under these assumptions, switching to induction gives the largest reduction in indoor PM2.5 because it reduces emissions at the source. The ventilation upgrade still helps, but source reduction performs better here.";
-      } else if (vent.peak < induction.peak && vent.inhaledMass < induction.inhaledMass) {
-        text = "Under these assumptions, improving kitchen ventilation gives the largest reduction in indoor PM2.5. In this case, faster pollutant removal outperforms source reduction alone.";
-      } else {
-        text = "Under these assumptions, the two alternatives trade off with each other. One performs better for peak PM2.5, while the other performs better for inhaled exposure. That means the best choice depends on the design priority.";
+      var ventHealth = 4;
+      var inductionHealth = 5;
+
+      var ventEnv = 3;
+      var inductionEnv = 4;
+
+      var ventTotal = ventTech + ventCost + ventHealth + ventEnv;
+      var inductionTotal = inductionTech + inductionCost + inductionHealth + inductionEnv;
+
+      var html = '<table class="summary-table">';
+      html += "<thead><tr>";
+      html += "<th>Criterion</th>";
+      html += "<th>Ventilation Upgrade</th>";
+      html += "<th>Induction Stove</th>";
+      html += "</tr></thead><tbody>";
+
+      html += "<tr><td>Technical Effectiveness</td><td>" + ventTech + "/5</td><td>" + inductionTech + "/5</td></tr>";
+      html += "<tr><td>Cost & Practicality</td><td>" + ventCost + "/5</td><td>" + inductionCost + "/5</td></tr>";
+      html += "<tr><td>Public Health & Safety</td><td>" + ventHealth + "/5</td><td>" + inductionHealth + "/5</td></tr>";
+      html += "<tr><td>Environmental Considerations</td><td>" + ventEnv + "/5</td><td>" + inductionEnv + "/5</td></tr>";
+      html += "<tr><th>Total</th><th>" + ventTotal + "/20</th><th>" + inductionTotal + "/20</th></tr>";
+
+      html += "</tbody></table>";
+      return {
+        html: html,
+        ventTotal: ventTotal,
+        inductionTotal: inductionTotal
+      };
+    }
+
+    function makeRecommendation(vent, induction, ventTotal, inductionTotal) {
+      if (inductionTotal > ventTotal) {
+        return "<strong>Recommendation:</strong> Under these assumptions, induction is the stronger long-term design choice because it reduces PM2.5 at the source and performs better overall in the MCDA comparison, even though it is less practical upfront.";
       }
-
-      return "<strong>Recommendation:</strong> " + text;
+      if (ventTotal > inductionTotal) {
+        return "<strong>Recommendation:</strong> Under these assumptions, the ventilation upgrade is the better balanced design choice because it gives strong PM2.5 reduction while remaining easier and cheaper to implement in an existing cabin.";
+      }
+      return "<strong>Recommendation:</strong> The alternatives are closely matched here. Ventilation is likely the better retrofit option, while induction is likely the better source-reduction option. The preferred choice depends on whether the user prioritizes cost or deeper emissions reduction.";
     }
 
     function runTool() {
       var volume = getNum("volume");
-      var background = getNum("background");
       var cookTime = getNum("cookTime");
       var postTime = getNum("postTime");
-      var gasEmission = getNum("gasEmission");
-      var inductionEmission = getNum("inductionEmission");
-      var baseACH = getNum("baseACH");
-      var hoodACH = getNum("hoodACH");
-      var deposition = getNum("deposition");
-      var breathingRate = getNum("breathingRate");
+      var cookLevel = document.getElementById("cookLevel").value;
+      var ventLevel = document.getElementById("ventLevel").value;
 
-      if (
-        isNaN(volume) || isNaN(background) || isNaN(cookTime) || isNaN(postTime) ||
-        isNaN(gasEmission) || isNaN(inductionEmission) || isNaN(baseACH) ||
-        isNaN(hoodACH) || isNaN(deposition) || isNaN(breathingRate)
-      ) {
-        alert("Please fill in all inputs with numbers.");
+      if (isNaN(volume) || isNaN(cookTime) || isNaN(postTime)) {
+        alert("Please enter valid numeric values.");
         return;
       }
 
-      var baseline = runScenario(volume, background, cookTime, postTime, gasEmission, baseACH, deposition, breathingRate);
-      var vent = runScenario(volume, background, cookTime, postTime, gasEmission, hoodACH, deposition, breathingRate);
-      var induction = runScenario(volume, background, cookTime, postTime, inductionEmission, baseACH, deposition, breathingRate);
+      var background = 8;
+      var breathingRate = 0.6;
+      var deposition = 0.3;
+      var upgradedACH = 6.0;
+
+      var cooking = getCookingProfile(cookLevel);
+      var vent = getVentProfile(ventLevel);
+
+      document.getElementById("assumptionBox").innerHTML =
+        "<strong>Embedded assumptions used:</strong><br>" +
+        "Cooking profile: <strong>" + cooking.label + "</strong><br>" +
+        "Gas stove emission rate = <strong>" + cooking.gasEmission + " µg/min</strong><br>" +
+        "Induction emission rate = <strong>" + cooking.inductionEmission + " µg/min</strong><br>" +
+        "Existing ventilation = <strong>" + vent.baseACH + " ACH</strong><br>" +
+        "Ventilation-upgrade alternative = <strong>" + upgradedACH + " ACH</strong><br>" +
+        "Background PM2.5 = <strong>" + background + " µg/m³</strong>, deposition = <strong>" + deposition + " 1/hr</strong>";
+
+      var baseline = runScenario(volume, background, cookTime, postTime, cooking.gasEmission, vent.baseACH, deposition, breathingRate);
+      var ventAlt = runScenario(volume, background, cookTime, postTime, cooking.gasEmission, upgradedACH, deposition, breathingRate);
+      var induction = runScenario(volume, background, cookTime, postTime, cooking.inductionEmission, vent.baseACH, deposition, breathingRate);
 
       document.getElementById("baselineResults").innerHTML =
         scenarioHtml(baseline, baseline.peak, baseline.inhaledMass, true);
 
       document.getElementById("ventResults").innerHTML =
-        scenarioHtml(vent, baseline.peak, baseline.inhaledMass, false);
+        scenarioHtml(ventAlt, baseline.peak, baseline.inhaledMass, false);
 
       document.getElementById("inductionResults").innerHTML =
         scenarioHtml(induction, baseline.peak, baseline.inhaledMass, false);
 
       document.getElementById("summaryTable").innerHTML =
-        makeSummaryTable(baseline, vent, induction);
+        makeSummaryTable(baseline, ventAlt, induction);
+
+      var ventPeakReduction = reductionPercent(baseline.peak, ventAlt.peak);
+      var inductionPeakReduction = reductionPercent(baseline.peak, induction.peak);
+
+      var ventTechScore = scoreTechnical(ventPeakReduction);
+      var inductionTechScore = scoreTechnical(inductionPeakReduction);
+
+      var mcda = makeMCDATable(ventTechScore, inductionTechScore);
+      document.getElementById("mcdaTable").innerHTML = mcda.html;
 
       document.getElementById("recommendation").innerHTML =
-        makeRecommendation(vent, induction);
+        makeRecommendation(ventAlt, induction, mcda.ventTotal, mcda.inductionTotal);
 
-      var bestPeak = vent.peak < induction.peak ? "ventilation upgrade" : "induction stove";
-      var bestExposure = vent.inhaledMass < induction.inhaledMass ? "ventilation upgrade" : "induction stove";
+      var bestPeak = ventAlt.peak < induction.peak ? "ventilation upgrade" : "induction stove";
+      var bestExposure = ventAlt.inhaledMass < induction.inhaledMass ? "ventilation upgrade" : "induction stove";
 
-      document.getElementById("evaluationText").innerHTML =
-        "Technical effectiveness: the " + bestPeak + " gives the lower peak indoor PM2.5 under these assumptions, while the " +
-        bestExposure + " gives the lower inhaled exposure. Public health: lower PM2.5 means lower inhalation exposure for people cooking or staying in the cabin afterward. Environmental and practical tradeoffs: ventilation removes indoor pollution faster but does not eliminate combustion, while induction reduces emissions at the source but may require higher upfront cost or electrical changes.";
+      document.getElementById("interpretationText").innerHTML =
+        "This tool is meant to support a design decision, not give a perfect prediction. The quantitative results show how the two alternatives compare under the same cabin conditions. In this run, the " +
+        bestPeak + " gives the lower peak indoor PM2.5, while the " +
+        bestExposure + " gives the lower estimated inhaled exposure. The MCDA table makes the tradeoffs visible by combining model-based technical effectiveness with structured judgments about practicality, health, and environmental effects. If the assumptions about cooking intensity or ventilation change, the preferred design may also change.";
     }
 
     document.getElementById("runBtn").addEventListener("click", runTool);
