@@ -7,35 +7,121 @@
   <style>
     * { box-sizing: border-box; }
 
+    :root {
+      --bg: #f7f2ea;
+      --paper: #fffdf9;
+      --ink: #23313b;
+      --muted: #6b7b86;
+      --navy: #29485c;
+      --sage: #7e9c8b;
+      --gold: #c8954a;
+      --rose: #d9b8a7;
+      --line: #e6ddd3;
+      --soft-blue: #edf4f8;
+      --soft-green: #eef6ef;
+      --soft-gold: #fbf4e8;
+      --shadow: 0 10px 30px rgba(53, 42, 31, 0.08);
+      --radius: 18px;
+    }
+
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
-      background: #f5f1e8;
-      color: #1f2933;
-      line-height: 1.5;
+      background:
+        radial-gradient(circle at top left, #fdf8f0 0%, var(--bg) 45%, #f3ede4 100%);
+      color: var(--ink);
+      line-height: 1.55;
     }
 
     .container {
-      max-width: 1050px;
-      margin: 30px auto;
-      padding: 0 16px 30px;
+      max-width: 1120px;
+      margin: 32px auto 40px;
+      padding: 0 18px;
     }
 
-    .card {
-      background: #ffffff;
-      border-radius: 14px;
-      padding: 20px;
-      margin-bottom: 18px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    .hero {
+      background: linear-gradient(135deg, rgba(41,72,92,0.96), rgba(126,156,139,0.92));
+      color: white;
+      border-radius: 26px;
+      padding: 34px 30px 28px;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -40px;
+      top: -40px;
+      width: 190px;
+      height: 190px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 0.83rem;
+      letter-spacing: 0.02em;
+      margin-bottom: 12px;
     }
 
     h1, h2, h3 {
       margin-top: 0;
     }
 
-    .subtitle {
-      color: #4b5b68;
-      margin-top: -6px;
+    .hero h1 {
+      margin-bottom: 8px;
+      font-size: 2.2rem;
+      line-height: 1.15;
+      max-width: 760px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 760px;
+      color: rgba(255,255,255,0.92);
+      position: relative;
+      z-index: 1;
+    }
+
+    .card {
+      background: rgba(255, 253, 249, 0.96);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(3px);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .section-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 6px rgba(200,149,74,0.12);
+      flex-shrink: 0;
+    }
+
+    .section-subtitle {
+      color: var(--muted);
+      margin-top: -4px;
       margin-bottom: 0;
     }
 
@@ -52,55 +138,108 @@
     }
 
     .input-group {
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
     label {
       display: block;
       font-weight: 700;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
+      font-size: 0.97rem;
     }
 
     input, select {
       width: 100%;
-      padding: 10px 12px;
-      border: 1px solid #c9d2da;
-      border-radius: 8px;
+      padding: 12px 13px;
+      border: 1px solid #d7cec4;
+      border-radius: 12px;
       font-size: 0.98rem;
-      background: #fff;
+      background: #fffdfa;
+      color: var(--ink);
+      transition: 0.18s ease;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--sage);
+      box-shadow: 0 0 0 4px rgba(126,156,139,0.15);
     }
 
     button {
       margin-top: 8px;
-      padding: 12px 16px;
+      padding: 13px 18px;
       border: none;
-      border-radius: 10px;
-      background: #244b6b;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--navy), #3f6a80);
       color: white;
       font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
+      box-shadow: 0 8px 18px rgba(41,72,92,0.22);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
     }
 
     button:hover {
-      background: #1b3a53;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(41,72,92,0.28);
+    }
+
+    .note-box {
+      background: var(--soft-gold);
+      border: 1px solid #efdebe;
+      border-left: 5px solid var(--gold);
+      padding: 14px;
+      border-radius: 14px;
+      margin-top: 14px;
     }
 
     .equation {
-      padding: 10px 12px;
-      background: #eef4f8;
-      border-left: 4px solid #244b6b;
-      border-radius: 6px;
+      padding: 12px 14px;
+      background: var(--soft-blue);
+      border: 1px solid #d8e7ef;
+      border-left: 5px solid var(--navy);
+      border-radius: 14px;
       font-family: "Courier New", Courier, monospace;
       margin: 12px 0;
       overflow-x: auto;
     }
 
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .chip {
+      display: inline-block;
+      background: #f4ede4;
+      border: 1px solid #e3d6c7;
+      color: #6c5948;
+      border-radius: 999px;
+      padding: 6px 11px;
+      font-size: 0.83rem;
+      font-weight: 700;
+    }
+
     .result-box {
-      background: #f8fafb;
-      border: 1px solid #dde5ea;
-      border-radius: 12px;
-      padding: 15px;
+      border-radius: 18px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #fffdfa 0%, #fbf8f3 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    }
+
+    .result-box:nth-child(1) {
+      border-top: 5px solid var(--rose);
+    }
+
+    .result-box:nth-child(2) {
+      border-top: 5px solid var(--gold);
+    }
+
+    .result-box:nth-child(3) {
+      border-top: 5px solid var(--sage);
     }
 
     .result-box h3 {
@@ -109,45 +248,46 @@
     }
 
     .result-box p {
-      margin: 6px 0;
+      margin: 7px 0;
     }
 
     .summary-table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 10px;
+      overflow: hidden;
+      border-radius: 14px;
     }
 
     .summary-table th,
     .summary-table td {
-      border: 1px solid #d5dfe6;
-      padding: 10px;
+      border: 1px solid #e5ddd2;
+      padding: 11px 10px;
       text-align: center;
     }
 
     .summary-table th {
-      background: #eef4f8;
+      background: #f3eee7;
+      color: #4c5c67;
+      font-size: 0.94rem;
+    }
+
+    .summary-table tr:nth-child(even) td {
+      background: #fcfaf7;
     }
 
     .recommendation {
       margin-top: 16px;
-      padding: 14px;
-      border-radius: 10px;
-      background: #eef7ef;
-      border-left: 5px solid #4c8b5d;
+      padding: 16px;
+      border-radius: 16px;
+      background: var(--soft-green);
+      border: 1px solid #d5e7d7;
+      border-left: 5px solid #5c8a69;
       font-weight: 600;
     }
 
-    .note-box {
-      background: #f8fafb;
-      border-left: 4px solid #c98a2e;
-      padding: 12px 14px;
-      border-radius: 8px;
-      margin-top: 10px;
-    }
-
     .small {
-      color: #596b78;
+      color: var(--muted);
       font-size: 0.92rem;
     }
 
@@ -155,16 +295,22 @@
       padding-left: 20px;
     }
 
-    footer {
+    .footer {
       text-align: center;
-      color: #6a7b88;
+      color: var(--muted);
       font-size: 0.92rem;
-      margin: 20px 0 0;
+      margin-top: 10px;
+      padding-bottom: 20px;
     }
 
-    @media (max-width: 900px) {
-      .grid, .results-grid {
+    @media (max-width: 950px) {
+      .grid,
+      .results-grid {
         grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        font-size: 1.9rem;
       }
     }
   </style>
@@ -172,17 +318,22 @@
 <body>
   <div class="container">
 
-    <div class="card">
+    <div class="hero">
+      <div class="eyebrow">CIVE 442 · Tool 2</div>
       <h1>Cabin Kitchen PM2.5 Design Tool</h1>
-      <p class="subtitle">
+      <p>
         Compare two engineering alternatives for reducing indoor PM2.5 from cooking in a small cabin kitchen:
-        <strong>(1) ventilation upgrade</strong> and <strong>(2) induction stove conversion</strong>.
+        <strong>ventilation upgrade</strong> versus <strong>induction stove conversion</strong>.
       </p>
     </div>
 
     <div class="grid">
       <div class="card">
-        <h2>User Inputs</h2>
+        <div class="section-title">
+          <span class="section-dot"></span>
+          <h2>User Inputs</h2>
+        </div>
+        <p class="section-subtitle">Simple scenario-based inputs instead of raw engineering parameters.</p>
 
         <div class="input-group">
           <label for="volume">Kitchen volume (m³)</label>
@@ -220,14 +371,22 @@
         <button id="runBtn" type="button">Run Comparison</button>
 
         <div class="note-box small">
-          This tool hides raw emission-rate inputs and instead uses built-in assumptions based on cooking intensity.
-          That makes it easier to use while still keeping the assumptions visible below.
+          This version keeps the tool easier to use by hiding raw emission-rate inputs and using built-in assumptions based on cooking intensity.
         </div>
       </div>
 
       <div class="card">
-        <h2>Model + Assumptions</h2>
-        <p>This tool uses a simplified <strong>single-zone indoor air model</strong>.</p>
+        <div class="section-title">
+          <span class="section-dot"></span>
+          <h2>Model + Assumptions</h2>
+        </div>
+        <p class="section-subtitle">A simplified single-zone indoor air model.</p>
+
+        <div class="chip-row">
+          <span class="chip">Well-mixed room</span>
+          <span class="chip">Constant cooking emissions</span>
+          <span class="chip">Ventilation + deposition removal</span>
+        </div>
 
         <div class="equation">dC/dt = E/V − k(C − Cbg)</div>
 
@@ -242,14 +401,16 @@
         <div id="assumptionBox" class="note-box"></div>
 
         <p class="small">
-          Assumptions: the room is well mixed, emissions are constant during cooking, and ventilation plus deposition remove particles.
-          The ventilation alternative increases removal; the induction alternative reduces emissions at the source.
+          The ventilation alternative increases particle removal. The induction alternative reduces emissions at the source.
         </p>
       </div>
     </div>
 
     <div class="card">
-      <h2>Technical Results</h2>
+      <div class="section-title">
+        <span class="section-dot"></span>
+        <h2>Technical Results</h2>
+      </div>
       <div class="results-grid">
         <div class="result-box">
           <h3>Baseline: Gas Stove</h3>
@@ -267,27 +428,36 @@
     </div>
 
     <div class="card">
-      <h2>Comparison Summary</h2>
+      <div class="section-title">
+        <span class="section-dot"></span>
+        <h2>Comparison Summary</h2>
+      </div>
       <div id="summaryTable"></div>
       <div id="recommendation" class="recommendation"></div>
     </div>
 
     <div class="card">
-      <h2>MCDA Comparison</h2>
+      <div class="section-title">
+        <span class="section-dot"></span>
+        <h2>MCDA Comparison</h2>
+      </div>
       <div id="mcdaTable"></div>
       <p class="small">
-        Technical effectiveness is based on model output. The other categories use a simple structured comparison so the tradeoffs are explicit.
+        Technical effectiveness comes from the model. The other criteria are structured comparison scores to make tradeoffs visible.
       </p>
     </div>
 
     <div class="card">
-      <h2>How to Interpret This Tool</h2>
+      <div class="section-title">
+        <span class="section-dot"></span>
+        <h2>How to Interpret This Tool</h2>
+      </div>
       <p id="interpretationText"></p>
     </div>
 
-    <footer>
+    <div class="footer">
       CIVE 442 Tool 2 · Indoor PM2.5 Reduction Comparison
-    </footer>
+    </div>
   </div>
 
   <script>
@@ -472,7 +642,7 @@
       };
     }
 
-    function makeRecommendation(vent, induction, ventTotal, inductionTotal) {
+    function makeRecommendation(ventTotal, inductionTotal) {
       if (inductionTotal > ventTotal) {
         return "<strong>Recommendation:</strong> Under these assumptions, induction is the stronger long-term design choice because it reduces PM2.5 at the source and performs better overall in the MCDA comparison, even though it is less practical upfront.";
       }
@@ -509,7 +679,7 @@
         "Induction emission rate = <strong>" + cooking.inductionEmission + " µg/min</strong><br>" +
         "Existing ventilation = <strong>" + vent.baseACH + " ACH</strong><br>" +
         "Ventilation-upgrade alternative = <strong>" + upgradedACH + " ACH</strong><br>" +
-        "Background PM2.5 = <strong>" + background + " µg/m³</strong>, deposition = <strong>" + deposition + " 1/hr</strong>";
+        "Background PM2.5 = <strong>8 µg/m³</strong>, deposition = <strong>0.3 1/hr</strong>";
 
       var baseline = runScenario(volume, background, cookTime, postTime, cooking.gasEmission, vent.baseACH, deposition, breathingRate);
       var ventAlt = runScenario(volume, background, cookTime, postTime, cooking.gasEmission, upgradedACH, deposition, breathingRate);
@@ -537,15 +707,15 @@
       document.getElementById("mcdaTable").innerHTML = mcda.html;
 
       document.getElementById("recommendation").innerHTML =
-        makeRecommendation(ventAlt, induction, mcda.ventTotal, mcda.inductionTotal);
+        makeRecommendation(mcda.ventTotal, mcda.inductionTotal);
 
       var bestPeak = ventAlt.peak < induction.peak ? "ventilation upgrade" : "induction stove";
       var bestExposure = ventAlt.inhaledMass < induction.inhaledMass ? "ventilation upgrade" : "induction stove";
 
       document.getElementById("interpretationText").innerHTML =
-        "This tool is meant to support a design decision, not give a perfect prediction. The quantitative results show how the two alternatives compare under the same cabin conditions. In this run, the " +
+        "This tool supports a design decision rather than giving a perfect prediction. Under the selected assumptions, the " +
         bestPeak + " gives the lower peak indoor PM2.5, while the " +
-        bestExposure + " gives the lower estimated inhaled exposure. The MCDA table makes the tradeoffs visible by combining model-based technical effectiveness with structured judgments about practicality, health, and environmental effects. If the assumptions about cooking intensity or ventilation change, the preferred design may also change.";
+        bestExposure + " gives the lower estimated inhaled exposure. The MCDA table helps make the tradeoffs visible by combining model-based technical effectiveness with broader design judgment about practicality, health, and environmental effects.";
     }
 
     document.getElementById("runBtn").addEventListener("click", runTool);
