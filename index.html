@@ -20,6 +20,7 @@
       --soft-blue: #edf4f8;
       --soft-green: #eef6ef;
       --soft-gold: #fbf4e8;
+      --soft-rose: #f9f1ec;
       --shadow: 0 10px 30px rgba(53, 42, 31, 0.08);
       --radius: 18px;
       --best-bg: #f1f8f2;
@@ -36,7 +37,7 @@
     }
 
     .container {
-      max-width: 1120px;
+      max-width: 1160px;
       margin: 32px auto 40px;
       padding: 0 18px;
     }
@@ -74,7 +75,7 @@
       margin-bottom: 12px;
     }
 
-    h1, h2, h3 {
+    h1, h2, h3, h4 {
       margin-top: 0;
     }
 
@@ -149,6 +150,12 @@
       gap: 12px;
     }
 
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
     label {
       display: block;
       font-weight: 700;
@@ -210,6 +217,19 @@
       font-family: "Courier New", Courier, monospace;
       margin: 12px 0;
       overflow-x: auto;
+    }
+
+    .model-subcard {
+      background: #fcfaf7;
+      border: 1px solid #eadfd2;
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 14px;
+    }
+
+    .model-subcard h4 {
+      margin-bottom: 8px;
+      color: #4e6170;
     }
 
     .chip-row {
@@ -290,6 +310,14 @@
       margin: 7px 0;
     }
 
+    .cost-line {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed #dccfc0;
+      font-weight: 700;
+      color: #5c6872;
+    }
+
     .summary-table {
       width: 100%;
       border-collapse: collapse;
@@ -303,6 +331,7 @@
       border: 1px solid #e5ddd2;
       padding: 11px 10px;
       text-align: center;
+      vertical-align: top;
     }
 
     .summary-table th {
@@ -331,6 +360,20 @@
       font-weight: 600;
     }
 
+    .mcda-explainer {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .mcda-note {
+      background: #fcfaf7;
+      border: 1px solid #eadfd2;
+      border-radius: 14px;
+      padding: 14px;
+    }
+
     .small {
       color: var(--muted);
       font-size: 0.92rem;
@@ -338,6 +381,7 @@
 
     ul {
       padding-left: 20px;
+      margin-bottom: 0;
     }
 
     .footer {
@@ -351,7 +395,9 @@
     @media (max-width: 950px) {
       .grid,
       .results-grid,
-      .input-row {
+      .input-row,
+      .two-col,
+      .mcda-explainer {
         grid-template-columns: 1fr;
       }
 
@@ -400,13 +446,24 @@
           <div class="computed-volume" id="volumeDisplay">Calculated volume: 45.0 m³</div>
         </div>
 
-        <div class="input-group">
-          <label for="cookLevel">Cooking intensity</label>
-          <select id="cookLevel">
-            <option value="light">Light cooking / simmering</option>
-            <option value="medium" selected>Typical meal cooking</option>
-            <option value="heavy">Heavy cooking / frying</option>
-          </select>
+        <div class="two-col">
+          <div class="input-group">
+            <label for="cookMethod">Cooking method</label>
+            <select id="cookMethod">
+              <option value="boil">Boiling / steaming</option>
+              <option value="saute" selected>Sautéing / general stovetop cooking</option>
+              <option value="fry">Frying / searing</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label for="cookIntensity">Cooking intensity</label>
+            <select id="cookIntensity">
+              <option value="low">Low</option>
+              <option value="medium" selected>Typical</option>
+              <option value="high">High</option>
+            </select>
+          </div>
         </div>
 
         <div class="input-group">
@@ -438,29 +495,33 @@
         </div>
         <p class="section-subtitle">Single-zone indoor air model.</p>
 
-        <div class="chip-row">
-          <span class="chip">Well-mixed room</span>
-          <span class="chip">Constant cooking emissions</span>
-          <span class="chip">Ventilation + deposition removal</span>
+        <div class="model-subcard">
+          <h4>Model</h4>
+          <div class="equation">dC/dt = E/V − k(C − Cbg)</div>
+
+          <ul>
+            <li><strong>C</strong> = indoor PM2.5 concentration</li>
+            <li><strong>E</strong> = cooking emission rate</li>
+            <li><strong>V</strong> = room volume</li>
+            <li><strong>k</strong> = total removal rate</li>
+            <li><strong>Cbg</strong> = background PM2.5 concentration</li>
+          </ul>
         </div>
 
-        <div class="equation">dC/dt = E/V − k(C − Cbg)</div>
-
-        <ul>
-          <li><strong>C</strong> = indoor PM2.5 concentration</li>
-          <li><strong>E</strong> = cooking emission rate</li>
-          <li><strong>V</strong> = room volume</li>
-          <li><strong>k</strong> = total removal rate</li>
-          <li><strong>Cbg</strong> = background PM2.5</li>
-          <li><strong>ACH</strong> = air changes per hour, or how many times the air in the room is replaced in one hour</li>
-          <li><strong>Breathing rate</strong> = assumed breathing volume used to estimate inhaled PM2.5 during and after cooking</li>
-        </ul>
+        <div class="model-subcard">
+          <h4>Key assumptions</h4>
+          <ul>
+            <li>The kitchen behaves as a single well-mixed indoor space.</li>
+            <li>Cooking emissions remain constant during the selected cooking period.</li>
+            <li>Ventilation is represented using ACH, meaning air changes per hour.</li>
+            <li>ACH describes how many times the air in the room is replaced in one hour.</li>
+            <li>A breathing rate is used to estimate inhaled PM2.5 during and after cooking.</li>
+            <li>The ventilation alternative increases particle removal.</li>
+            <li>The induction alternative reduces emissions at the source.</li>
+          </ul>
+        </div>
 
         <div id="assumptionBox" class="note-box"></div>
-
-        <p class="small">
-          The ventilation alternative increases particle removal. The induction alternative reduces emissions at the source.
-        </p>
       </div>
     </div>
 
@@ -474,15 +535,19 @@
           <h3>Baseline: Gas Stove</h3>
           <div id="baselineResults"></div>
         </div>
+
         <div class="result-box" id="ventCard">
           <div id="ventBadge"></div>
           <h3>Alternative 1: Ventilation Upgrade</h3>
           <div id="ventResults"></div>
+          <div class="cost-line" id="ventCost"></div>
         </div>
+
         <div class="result-box" id="inductionCard">
           <div id="inductionBadge"></div>
           <h3>Alternative 2: Induction Stove</h3>
           <div id="inductionResults"></div>
+          <div class="cost-line" id="inductionCost"></div>
         </div>
       </div>
     </div>
@@ -499,12 +564,24 @@
     <div class="card">
       <div class="section-title">
         <span class="section-dot"></span>
-        <h2>MCDA Comparison</h2>
+        <h2>Expanded MCDA Comparison</h2>
       </div>
       <div id="mcdaTable"></div>
-      <p class="small">
-        Technical effectiveness comes from the model. The other criteria are structured comparison scores to make tradeoffs visible.
-      </p>
+
+      <div class="mcda-explainer">
+        <div class="mcda-note">
+          <h4>How scoring works</h4>
+          <p class="small">
+            Each alternative is scored across multiple criteria. Technical effectiveness is based on the modeled PM2.5 reduction. The other categories help capture real design tradeoffs such as cost, practicality, source control, and health protection.
+          </p>
+        </div>
+        <div class="mcda-note">
+          <h4>Why this matters</h4>
+          <p class="small">
+            A design option may lower PM2.5 more, but still be harder to install or afford. The MCDA section makes those tradeoffs visible instead of reducing the decision to a single concentration number.
+          </p>
+        </div>
+      </div>
     </div>
 
     <div class="footer">
@@ -521,7 +598,6 @@
       var length = getNum("length");
       var width = getNum("width");
       var height = getNum("height");
-
       if (isNaN(length) || isNaN(width) || isNaN(height)) return NaN;
       return length * width * height;
     }
@@ -529,7 +605,6 @@
     function updateVolumeDisplay() {
       var volume = getVolume();
       var display = document.getElementById("volumeDisplay");
-
       if (isNaN(volume)) {
         display.innerHTML = "Calculated volume: —";
       } else {
@@ -537,25 +612,29 @@
       }
     }
 
-    function getCookingProfile(level) {
-      if (level === "light") {
-        return {
-          label: "Light cooking / simmering",
-          gasEmission: 800,
-          inductionEmission: 250
-        };
+    function getCookingProfile(method, intensity) {
+      var gasBase = 1800;
+      var inductionBase = 400; // updated target
+
+      if (method === "boil") {
+        gasBase = 900;
+        inductionBase = 150;
+      } else if (method === "saute") {
+        gasBase = 1800;
+        inductionBase = 400;
+      } else if (method === "fry") {
+        gasBase = 2600;
+        inductionBase = 900;
       }
-      if (level === "heavy") {
-        return {
-          label: "Heavy cooking / frying",
-          gasEmission: 3200,
-          inductionEmission: 1200
-        };
-      }
+
+      var factor = 1.0;
+      if (intensity === "low") factor = 0.75;
+      if (intensity === "high") factor = 1.35;
+
       return {
-        label: "Typical meal cooking",
-        gasEmission: 1800,
-        inductionEmission: 600
+        label: method + " / " + intensity,
+        gasEmission: Math.round(gasBase * factor),
+        inductionEmission: Math.round(inductionBase * factor)
       };
     }
 
@@ -631,17 +710,43 @@
       };
     }
 
+    function estimateVentCost(volume) {
+      // rough planning estimate
+      return 850 + (12 * volume);
+    }
+
+    function estimateInductionCost(volume) {
+      // rough planning estimate
+      return 1400 + (8 * volume);
+    }
+
     function reductionPercent(base, alt) {
       if (base <= 0) return 0;
       return ((base - alt) / base) * 100;
     }
 
     function scoreTechnical(reduction) {
-      if (reduction >= 60) return 5;
-      if (reduction >= 45) return 4;
-      if (reduction >= 30) return 3;
-      if (reduction >= 15) return 2;
+      if (reduction >= 65) return 5;
+      if (reduction >= 50) return 4;
+      if (reduction >= 35) return 3;
+      if (reduction >= 20) return 2;
       return 1;
+    }
+
+    function scoreCost(cost, type) {
+      if (type === "vent") {
+        if (cost <= 1200) return 5;
+        if (cost <= 1500) return 4;
+        if (cost <= 1800) return 3;
+        if (cost <= 2200) return 2;
+        return 1;
+      } else {
+        if (cost <= 1600) return 5;
+        if (cost <= 2000) return 4;
+        if (cost <= 2400) return 3;
+        if (cost <= 3000) return 2;
+        return 1;
+      }
     }
 
     function scenarioHtml(result, baselinePeak, baselineInhaled, isBaseline) {
@@ -663,86 +768,76 @@
       return html;
     }
 
-    function makeSummaryTable(baseline, vent, induction, bestRow) {
+    function makeSummaryTable(baseline, vent, induction, ventCost, inductionCost, bestRow) {
       var html = '<table class="summary-table">';
       html += "<thead><tr>";
       html += "<th>Scenario</th>";
       html += "<th>Peak PM2.5 (µg/m³)</th>";
-      html += "<th>End of Cooking (µg/m³)</th>";
       html += "<th>Inhaled Mass (µg)</th>";
+      html += "<th>Estimated Cost</th>";
       html += "</tr></thead><tbody>";
 
       html += "<tr>";
       html += "<td>Baseline Gas</td>";
       html += "<td>" + baseline.peak.toFixed(1) + "</td>";
-      html += "<td>" + baseline.CendCook.toFixed(1) + "</td>";
       html += "<td>" + baseline.inhaledMass.toFixed(1) + "</td>";
+      html += "<td>Existing condition</td>";
       html += "</tr>";
 
       html += '<tr class="' + (bestRow === "vent" ? 'best-row' : '') + '">';
       html += "<td>Gas + Vent Upgrade" + (bestRow === "vent" ? " ★" : "") + "</td>";
       html += "<td>" + vent.peak.toFixed(1) + "</td>";
-      html += "<td>" + vent.CendCook.toFixed(1) + "</td>";
       html += "<td>" + vent.inhaledMass.toFixed(1) + "</td>";
+      html += "<td>$" + ventCost.toFixed(0) + "</td>";
       html += "</tr>";
 
       html += '<tr class="' + (bestRow === "induction" ? 'best-row' : '') + '">';
       html += "<td>Induction Stove" + (bestRow === "induction" ? " ★" : "") + "</td>";
       html += "<td>" + induction.peak.toFixed(1) + "</td>";
-      html += "<td>" + induction.CendCook.toFixed(1) + "</td>";
       html += "<td>" + induction.inhaledMass.toFixed(1) + "</td>";
+      html += "<td>$" + inductionCost.toFixed(0) + "</td>";
       html += "</tr>";
 
       html += "</tbody></table>";
       return html;
     }
 
-    function makeMCDATable(ventTech, inductionTech, winner) {
-      var ventCost = 4;
-      var inductionCost = 2;
-
-      var ventHealth = 4;
-      var inductionHealth = 5;
-
-      var ventEnv = 3;
-      var inductionEnv = 4;
-
-      var ventTotal = ventTech + ventCost + ventHealth + ventEnv;
-      var inductionTotal = inductionTech + inductionCost + inductionHealth + inductionEnv;
-
+    function makeMCDATable(scores, winner) {
       var html = '<table class="summary-table">';
       html += "<thead><tr>";
       html += "<th>Criterion</th>";
+      html += "<th>Weight</th>";
       html += "<th>Ventilation Upgrade</th>";
       html += "<th>Induction Stove</th>";
+      html += "<th>Why it matters</th>";
       html += "</tr></thead><tbody>";
 
-      html += "<tr><td>Technical Effectiveness</td><td>" + ventTech + "/5</td><td>" + inductionTech + "/5</td></tr>";
-      html += "<tr><td>Cost & Practicality</td><td>" + ventCost + "/5</td><td>" + inductionCost + "/5</td></tr>";
-      html += "<tr><td>Public Health & Safety</td><td>" + ventHealth + "/5</td><td>" + inductionHealth + "/5</td></tr>";
-      html += "<tr><td>Environmental Considerations</td><td>" + ventEnv + "/5</td><td>" + inductionEnv + "/5</td></tr>";
+      html += "<tr><td>Technical Effectiveness</td><td>35%</td><td>" + scores.ventTech + "/5</td><td>" + scores.indTech + "/5</td><td>How much the option reduces modeled PM2.5 exposure.</td></tr>";
+      html += "<tr><td>Upfront Cost</td><td>20%</td><td>" + scores.ventCost + "/5</td><td>" + scores.indCost + "/5</td><td>Lower cost improves short-term feasibility.</td></tr>";
+      html += "<tr><td>Practicality / Retrofit Ease</td><td>15%</td><td>" + scores.ventPractical + "/5</td><td>" + scores.indPractical + "/5</td><td>How difficult the option is to install in an existing cabin kitchen.</td></tr>";
+      html += "<tr><td>Public Health & Safety</td><td>20%</td><td>" + scores.ventHealth + "/5</td><td>" + scores.indHealth + "/5</td><td>How directly the option protects occupants from indoor exposure.</td></tr>";
+      html += "<tr><td>Environmental / Source Control</td><td>10%</td><td>" + scores.ventEnv + "/5</td><td>" + scores.indEnv + "/5</td><td>Whether the option removes pollution or prevents it at the source.</td></tr>";
+
       html += '<tr class="' + (winner === "tie" ? "" : "best-row") + '">';
-      html += "<th>Total</th>";
-      html += "<th>" + ventTotal + "/20" + (winner === "vent" ? " ★" : "") + "</th>";
-      html += "<th>" + inductionTotal + "/20" + (winner === "induction" ? " ★" : "") + "</th>";
+      html += "<th>Weighted Total</th>";
+      html += "<th>100%</th>";
+      html += "<th>" + scores.ventWeighted.toFixed(2) + "/5" + (winner === "vent" ? " ★" : "") + "</th>";
+      html += "<th>" + scores.indWeighted.toFixed(2) + "/5" + (winner === "induction" ? " ★" : "") + "</th>";
+      html += "<th>Best overall balance under the selected assumptions.</th>";
       html += "</tr>";
 
       html += "</tbody></table>";
-      return {
-        html: html,
-        ventTotal: ventTotal,
-        inductionTotal: inductionTotal
-      };
+      return html;
     }
 
     function makeRecommendation(winner) {
       if (winner === "induction") {
-        return "<strong>Best overall option:</strong> Induction stove conversion. Based on the current inputs and comparison criteria, induction performs better overall because it reduces PM2.5 at the source and scores highest in the comparison.";
+        return "<strong>Best overall option:</strong> Induction stove conversion. Under the selected cooking and room conditions, induction performs best overall because it reduces PM2.5 at the source and provides the strongest health-protection benefit, even with a higher upfront cost.";
       }
       if (winner === "vent") {
-        return "<strong>Best overall option:</strong> Ventilation upgrade. Based on the current inputs and comparison criteria, the ventilation upgrade provides the best balance of PM2.5 reduction and practicality.";
+        return "<strong>Best overall option:</strong> Ventilation upgrade. Under the selected conditions, the ventilation upgrade provides the best balance of PM2.5 reduction, cost, and retrofit practicality.";
       }
-      return "<strong>Comparison result:</strong> The two options are closely matched. Ventilation is generally the easier retrofit, while induction is generally the stronger source-reduction strategy.";
+      return "<strong>Comparison result:</strong> The two options are closely matched. Ventilation remains the easier retrofit, while induction remains the stronger source-reduction strategy.";
     }
 
     function clearHighlights() {
@@ -754,7 +849,6 @@
 
     function applyBestHighlight(winner) {
       clearHighlights();
-
       if (winner === "vent") {
         document.getElementById("ventCard").classList.add("best-option");
         document.getElementById("ventBadge").innerHTML = '<span class="best-badge">Best Overall Option</span>';
@@ -768,7 +862,8 @@
       var volume = getVolume();
       var cookTime = getNum("cookTime");
       var postTime = getNum("postTime");
-      var cookLevel = document.getElementById("cookLevel").value;
+      var cookMethod = document.getElementById("cookMethod").value;
+      var cookIntensity = document.getElementById("cookIntensity").value;
       var ventLevel = document.getElementById("ventLevel").value;
 
       if (isNaN(volume) || isNaN(cookTime) || isNaN(postTime) || volume <= 0) {
@@ -781,22 +876,28 @@
       var deposition = 0.3;
       var upgradedACH = 6.0;
 
-      var cooking = getCookingProfile(cookLevel);
+      var cooking = getCookingProfile(cookMethod, cookIntensity);
       var vent = getVentProfile(ventLevel);
-
-      document.getElementById("assumptionBox").innerHTML =
-        "<strong>Embedded assumptions used:</strong><br>" +
-        "Calculated room volume = <strong>" + volume.toFixed(1) + " m³</strong><br>" +
-        "Cooking profile: <strong>" + cooking.label + "</strong><br>" +
-        "Gas stove emission rate = <strong>" + cooking.gasEmission + " µg/min</strong><br>" +
-        "Induction emission rate = <strong>" + cooking.inductionEmission + " µg/min</strong><br>" +
-        "Existing ventilation = <strong>" + vent.baseACH + " ACH</strong><br>" +
-        "Ventilation-upgrade alternative = <strong>" + upgradedACH + " ACH</strong><br>" +
-        "Background PM2.5 = <strong>8 µg/m³</strong>, deposition = <strong>0.3 1/hr</strong>, breathing rate = <strong>0.6 m³/hr</strong>";
 
       var baseline = runScenario(volume, background, cookTime, postTime, cooking.gasEmission, vent.baseACH, deposition, breathingRate);
       var ventAlt = runScenario(volume, background, cookTime, postTime, cooking.gasEmission, upgradedACH, deposition, breathingRate);
       var induction = runScenario(volume, background, cookTime, postTime, cooking.inductionEmission, vent.baseACH, deposition, breathingRate);
+
+      var ventCost = estimateVentCost(volume);
+      var inductionCost = estimateInductionCost(volume);
+
+      document.getElementById("assumptionBox").innerHTML =
+        "<strong>Embedded assumptions used:</strong><br>" +
+        "Calculated room volume = <strong>" + volume.toFixed(1) + " m³</strong><br>" +
+        "Cooking profile = <strong>" + cookMethod + ", " + cookIntensity + "</strong><br>" +
+        "Gas stove emission rate = <strong>" + cooking.gasEmission + " µg/min</strong><br>" +
+        "Induction emission rate = <strong>" + cooking.inductionEmission + " µg/min</strong><br>" +
+        "Existing ventilation = <strong>" + vent.baseACH + " ACH</strong><br>" +
+        "Ventilation-upgrade alternative = <strong>" + upgradedACH + " ACH</strong><br>" +
+        "Background PM2.5 = <strong>8 µg/m³</strong><br>" +
+        "Deposition = <strong>0.3 1/hr</strong><br>" +
+        "Breathing rate = <strong>0.6 m³/hr</strong><br>" +
+        "Cost values are rough planning estimates for comparison, not contractor quotes.";
 
       document.getElementById("baselineResults").innerHTML =
         scenarioHtml(baseline, baseline.peak, baseline.inhaledMass, true);
@@ -807,24 +908,54 @@
       document.getElementById("inductionResults").innerHTML =
         scenarioHtml(induction, baseline.peak, baseline.inhaledMass, false);
 
+      document.getElementById("ventCost").innerHTML =
+        "Estimated installed cost: $" + ventCost.toFixed(0);
+
+      document.getElementById("inductionCost").innerHTML =
+        "Estimated installed cost: $" + inductionCost.toFixed(0);
+
       var ventPeakReduction = reductionPercent(baseline.peak, ventAlt.peak);
       var inductionPeakReduction = reductionPercent(baseline.peak, induction.peak);
 
-      var ventTechScore = scoreTechnical(ventPeakReduction);
-      var inductionTechScore = scoreTechnical(inductionPeakReduction);
+      var scores = {
+        ventTech: scoreTechnical(ventPeakReduction),
+        indTech: scoreTechnical(inductionPeakReduction),
+        ventCost: scoreCost(ventCost, "vent"),
+        indCost: scoreCost(inductionCost, "ind"),
+        ventPractical: 4,
+        indPractical: 2,
+        ventHealth: 4,
+        indHealth: 5,
+        ventEnv: 3,
+        indEnv: 5
+      };
+
+      scores.ventWeighted =
+        (scores.ventTech * 0.35) +
+        (scores.ventCost * 0.20) +
+        (scores.ventPractical * 0.15) +
+        (scores.ventHealth * 0.20) +
+        (scores.ventEnv * 0.10);
+
+      scores.indWeighted =
+        (scores.indTech * 0.35) +
+        (scores.indCost * 0.20) +
+        (scores.indPractical * 0.15) +
+        (scores.indHealth * 0.20) +
+        (scores.indEnv * 0.10);
 
       var winner = "tie";
-      if (ventTechScore + 4 + 4 + 3 > inductionTechScore + 2 + 5 + 4) {
+      if (scores.ventWeighted > scores.indWeighted) {
         winner = "vent";
-      } else if (inductionTechScore + 2 + 5 + 4 > ventTechScore + 4 + 4 + 3) {
+      } else if (scores.indWeighted > scores.ventWeighted) {
         winner = "induction";
       }
 
       document.getElementById("summaryTable").innerHTML =
-        makeSummaryTable(baseline, ventAlt, induction, winner);
+        makeSummaryTable(baseline, ventAlt, induction, ventCost, inductionCost, winner);
 
-      var mcda = makeMCDATable(ventTechScore, inductionTechScore, winner);
-      document.getElementById("mcdaTable").innerHTML = mcda.html;
+      document.getElementById("mcdaTable").innerHTML =
+        makeMCDATable(scores, winner);
 
       document.getElementById("recommendation").innerHTML =
         makeRecommendation(winner);
